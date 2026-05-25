@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BamOS | Hệ điều hành dành cho Lập trình viên & Creator</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        dark: '#05050A',
+                        darker: '#020205',
+                        brand: {
+                            blue: '#3b82f6',
+                            purple: '#8b5cf6',
+                            neon: '#60a5fa'
+                        }
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #05050A;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Utilities */
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .glass-card {
+            background: linear-gradient(180deg, rgba(30, 30, 35, 0.4) 0%, rgba(20, 20, 25, 0.4) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(96, 165, 250, 0.3);
+            box-shadow: 0 10px 40px -10px rgba(96, 165, 250, 0.15);
+            transform: translateY(-5px);
+        }
+
+        /* Text Gradients */
+        .text-gradient {
+            background: linear-gradient(135deg, #60a5fa 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Background Glows */
+        .glow-bg {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(139,92,246,0.15) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            z-index: -1;
+            filter: blur(60px);
+            animation: pulse 8s infinite alternate;
+        }
+
+        .glow-bg-2 {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            z-index: -1;
+            filter: blur(50px);
+            animation: pulse 10s infinite alternate-reverse;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.5; }
+            100% { transform: scale(1.2) translate(50px, 50px); opacity: 1; }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-purple selection:text-white relative">
+
+    <!-- Ambient Background -->
+    <div class="glow-bg top-[-20%] left-[-10%]"></div>
+    <div class="glow-bg-2 top-[20%] right-[-10%]"></div>
+    <div class="glow-bg top-[60%] left-[20%]"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 transition-all duration-300 glass border-b-0 border-white/5">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2 font-bold text-xl tracking-tight">
+                <i class="ph-fill ph-linux-logo text-brand-neon text-2xl"></i>
+                <span>Bam<span class="text-white">OS</span></span>
+            </div>
+            <div class="hidden md:flex space-x-8 text-sm font-medium text-gray-300">
+                <a href="#home" class="hover:text-white transition-colors">Trang chủ</a>
+                <a href="#download" class="hover:text-white transition-colors">Tải về</a>
+                <a href="#packages" class="hover:text-white transition-colors">Tra cứu</a>
+                <a href="#docs" class="hover:text-white transition-colors">Tài liệu</a>
+                <a href="#community" class="hover:text-white transition-colors">Cộng đồng</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="#sponsor" class="hidden md:block text-sm text-gray-400 hover:text-white transition-colors">Sponsor</a>
+                <a href="#download" class="bg-white text-black px-4 py-2 rounded-full text-sm font-semibold hover:bg-gray-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_25px_rgba(255,255,255,0.4)]">
+                    Tải BamOS
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative pt-40 pb-20 px-6 min-h-screen flex flex-col items-center justify-center text-center overflow-hidden">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-xs font-medium text-brand-neon mb-8 border border-brand-blue/30">
+            <span class="w-2 h-2 rounded-full bg-brand-neon animate-pulse"></span>
+            BamOS V2 is now in Beta
+        </div>
+        
+        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 max-w-4xl leading-tight">
+            Máy tính lập trình của bạn. <br>
+            <span class="text-gradient">Tùy biến. Bất bại.</span>
+        </h1>
+        
+        <p class="text-lg md:text-xl text-gray-400 max-w-2xl mb-10 font-light">
+            Code mọi nơi. Chơi mọi lúc. Trải nghiệm sức mạnh cấu hình của NixOS kết hợp sự mượt mà, tiện lợi của GLF OS. Hệ điều hành duy nhất bạn cần.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 mb-16">
+            <a href="#download" class="bg-gradient-to-r from-brand-blue to-brand-purple text-white px-8 py-4 rounded-xl font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-[0_0_30px_rgba(96,165,250,0.3)]">
+                <i class="ph-bold ph-download-simple text-xl"></i>
+                Tải về BamOS
+            </a>
+            <a href="#packages" class="glass text-white px-8 py-4 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-white/10 transition-colors">
+                <i class="ph-bold ph-magnifying-glass text-xl"></i>
+                Tra cứu Packages
+            </a>
+        </div>
+
+        <!-- Desktop Mockup (CSS Only) -->
+        <div class="relative w-full max-w-5xl aspect-[16/9] rounded-2xl glass border border-white/10 shadow-2xl shadow-brand-purple/20 overflow-hidden floating">
+            <!-- Mockup Header -->
+            <div class="h-10 border-b border-white/10 bg-black/40 flex items-center px-4 gap-2">
+                <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+                <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+                <div class="mx-auto text-xs font-mono text-gray-500">flake.nix — BamOS</div>
+            </div>
+            <!-- Mockup Body (Code Editor style) -->
+            <div class="p-6 text-left font-mono text-sm sm:text-base leading-relaxed h-full bg-[#0d0d14]">
+                <span class="text-brand-purple">description</span> = <span class="text-green-400">"Hệ thống BamOS tối ưu cho Lập trình viên"</span>;<br><br>
+                <span class="text-brand-blue">outputs</span> = { self, nixpkgs, ... }: {<br>
+                &nbsp;&nbsp;nixosConfigurations.<span class="text-yellow-200">developer-machine</span> = nixpkgs.lib.nixosSystem {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;system = <span class="text-green-400">"x86_64-linux"</span>;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;modules = [<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;./hardware-configuration.nix<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-gray-500"># Môi trường Dev nhất quán</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;environment.systemPackages = with pkgs; [<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;git vscode docker neovim<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;];<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-gray-500"># Sẵn sàng Out-of-the-box</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;services.xserver.videoDrivers = [ <span class="text-green-400">"nvidia"</span> ];<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;];<br>
+                &nbsp;&nbsp;};<br>
+                };<br>
+                <div class="mt-4 flex items-center gap-2">
+                    <span class="text-green-500">➜</span>
+                    <span class="text-brand-neon">~</span>
+                    <span class="text-gray-300 animate-pulse">_</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4 Pillars Section -->
+    <section class="py-24 px-6 max-w-7xl mx-auto relative">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-5xl font-bold mb-4">Kiến trúc Tương lai</h2>
+            <p class="text-gray-400 max-w-2xl mx-auto">4 trụ cột công nghệ làm nên sự khác biệt của BamOS so với các hệ điều hành truyền thống.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Feature 1 -->
+            <div class="glass-card p-8 rounded-2xl">
+                <div class="w-12 h-12 rounded-xl bg-brand-blue/20 flex items-center justify-center mb-6 text-brand-neon">
+                    <i class="ph-fill ph-shield-check text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Tuyệt đối Ổn định</h3>
+                <p class="text-sm text-gray-400 leading-relaxed">Nhờ cơ chế quản lý gói của Nix, cập nhật không bao giờ làm hỏng hệ thống. Rollback về phiên bản cũ chỉ trong 1 giây.</p>
+            </div>
+            
+            <!-- Feature 2 -->
+            <div class="glass-card p-8 rounded-2xl">
+                <div class="w-12 h-12 rounded-xl bg-brand-purple/20 flex items-center justify-center mb-6 text-brand-purple">
+                    <i class="ph-fill ph-code text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Môi trường Nhất quán</h3>
+                <p class="text-sm text-gray-400 leading-relaxed">Chia sẻ môi trường lập trình (tools, libs) cho cả team chỉ bằng một file cấu hình duy nhất (Declarative).</p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="glass-card p-8 rounded-2xl">
+                <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center mb-6 text-green-400">
+                    <i class="ph-fill ph-rocket-launch text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Out-of-the-box</h3>
+                <p class="text-sm text-gray-400 leading-relaxed">Cài sẵn driver GPU (NVIDIA, AMD), Wayland và các công cụ cần thiết ngay từ lần khởi động đầu tiên.</p>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="glass-card p-8 rounded-2xl">
+                <div class="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center mb-6 text-red-400">
+                    <i class="ph-fill ph-users-three text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Cộng đồng Việt</h3>
+                <p class="text-sm text-gray-400 leading-relaxed">Hỗ trợ trực tiếp bằng tiếng Việt. Tài liệu phong phú, giải quyết lỗi nhanh chóng thông qua Discord & Matrix.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- OS Builder / Download Section -->
+    <section id="download" class="py-24 px-6 max-w-7xl mx-auto border-t border-white/5">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div>
+                <h2 class="text-3xl md:text-5xl font-bold mb-6">Tùy biến Hệ điều hành <br><span class="text-gradient">của riêng bạn.</span></h2>
+                <p class="text-gray-400 mb-8 text-lg">Chọn các phiên bản được tối ưu sẵn hoặc sử dụng BamOS Builder để thiết kế bản ISO vừa vặn hoàn hảo với nhu cầu phần cứng và công việc.</p>
+                
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start gap-4 p-4 rounded-xl glass border-l-4 border-l-brand-blue">
+                        <i class="ph-fill ph-terminal-window text-2xl text-brand-neon mt-1"></i>
+                        <div>
+                            <h4 class="font-bold text-white">Developer Edition</h4>
+                            <p class="text-sm text-gray-400">Tích hợp sẵn Git, Docker, Direnv, VSCode và các bộ Compilers.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 rounded-xl glass border-l-4 border-l-brand-purple">
+                        <i class="ph-fill ph-game-controller text-2xl text-brand-purple mt-1"></i>
+                        <div>
+                            <h4 class="font-bold text-white">Gaming / Studio Edition</h4>
+                            <p class="text-sm text-gray-400">Bao gồm Steam, Faugus Launcher, OBS & Driver NVIDIA tối ưu hóa.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 rounded-xl glass border-l-4 border-l-gray-500">
+                        <i class="ph-fill ph-cpu text-2xl text-gray-300 mt-1"></i>
+                        <div>
+                            <h4 class="font-bold text-white">Minimal Edition</h4>
+                            <p class="text-sm text-gray-400">Dành cho người dùng thuần TUI, thích xây dựng mọi thứ từ con số 0.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Builder UI Mockup -->
+            <div class="glass p-6 rounded-2xl border border-white/10 shadow-2xl relative">
+                <div class="absolute -top-4 -right-4 bg-brand-purple text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">Step-by-step</div>
+                <h3 class="font-bold text-xl mb-6 flex items-center gap-2">
+                    <i class="ph-fill ph-wrench text-brand-neon"></i> BamOS Builder
+                </h3>
+                
+                <div class="space-y-6">
+                    <!-- Environment -->
+                    <div>
+                        <label class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2 block">1. Môi trường (Desktop)</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button class="bg-brand-blue/20 border border-brand-blue/50 text-white rounded-lg py-2 text-sm font-medium">Hyprland</button>
+                            <button class="glass text-gray-400 hover:text-white rounded-lg py-2 text-sm font-medium transition-colors">GNOME</button>
+                            <button class="glass text-gray-400 hover:text-white rounded-lg py-2 text-sm font-medium transition-colors">KDE</button>
+                        </div>
+                    </div>
+
+                    <!-- Hardware -->
+                    <div>
+                        <label class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2 block">2. Đồ họa (GPU)</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button class="bg-green-500/20 border border-green-500/50 text-white rounded-lg py-2 text-sm font-medium">NVIDIA Proprietary</button>
+                            <button class="glass text-gray-400 hover:text-white rounded-lg py-2 text-sm font-medium transition-colors">AMD / Intel (Mesa)</button>
+                        </div>
+                    </div>
+
+                    <!-- Generate -->
+                    <div class="pt-4 mt-4 border-t border-white/10">
+                        <div class="flex items-center justify-between text-sm text-gray-400 mb-4 font-mono">
+                            <span>RAM: >= 8GB</span>
+                            <span>Storage: >= 20GB</span>
+                        </div>
+                        <button class="w-full bg-white text-black font-bold py-3 rounded-xl hover:bg-gray-200 transition-colors shadow-lg">
+                            Sinh file flake.nix & Build ISO
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Packages & AI Integration -->
+    <section id="packages" class="py-24 px-6 max-w-7xl mx-auto border-t border-white/5 relative">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-5xl font-bold mb-4">Tìm kiếm siêu tốc. <br>Hỗ trợ bởi AI.</h2>
+            <p class="text-gray-400 max-w-2xl mx-auto">Tra cứu Packages & Options chuẩn xác nhờ Meilisearch. Xử lý lỗi tự động nhờ Gemini AI Agent.</p>
+        </div>
+
+        <!-- Search Bar Mockup -->
+        <div class="max-w-3xl mx-auto mb-16">
+            <div class="relative group">
+                <div class="absolute inset-0 bg-brand-blue/20 rounded-2xl blur-xl group-hover:bg-brand-blue/30 transition-all duration-500"></div>
+                <div class="relative glass rounded-2xl p-2 flex items-center border border-brand-blue/30">
+                    <i class="ph-bold ph-magnifying-glass text-2xl text-gray-400 ml-4"></i>
+                    <input type="text" placeholder="Tìm kiếm package (vd: flutter, nodejs, spring-boot)..." class="bg-transparent w-full border-none outline-none text-white px-4 py-3 font-mono text-sm placeholder-gray-500" value="spring-boot">
+                    <button class="bg-brand-blue/20 text-brand-neon px-4 py-2 rounded-xl text-sm font-medium mr-2 font-mono">⌘ K</button>
+                </div>
+            </div>
+            
+            <!-- Search Results -->
+            <div class="mt-4 glass border border-white/10 rounded-2xl p-4 overflow-hidden">
+                <div class="flex items-center justify-between text-xs text-gray-500 font-mono mb-2 px-2">
+                    <span>Packages (3)</span>
+                    <span>Flake Options</span>
+                </div>
+                
+                <!-- Result item 1 -->
+                <div class="p-3 rounded-xl hover:bg-white/5 cursor-pointer flex justify-between items-center transition-colors">
+                    <div class="flex items-center gap-3">
+                        <i class="ph-fill ph-package text-brand-purple text-xl"></i>
+                        <div>
+                            <div class="font-mono text-sm font-bold text-white">spring-boot-cli</div>
+                            <div class="font-mono text-xs text-gray-400">Spring Boot CLI - command line tool for Spring</div>
+                        </div>
+                    </div>
+                    <button class="text-xs font-mono bg-white/10 px-2 py-1 rounded text-gray-300">Copy Flake</button>
+                </div>
+
+                <!-- Result item 2 -->
+                <div class="p-3 rounded-xl hover:bg-white/5 cursor-pointer flex justify-between items-center transition-colors">
+                    <div class="flex items-center gap-3">
+                        <i class="ph-fill ph-package text-brand-blue text-xl"></i>
+                        <div>
+                            <div class="font-mono text-sm font-bold text-white">flutter</div>
+                            <div class="font-mono text-xs text-gray-400">Google's UI toolkit for crafting beautiful, native apps</div>
+                        </div>
+                    </div>
+                    <button class="text-xs font-mono bg-white/10 px-2 py-1 rounded text-gray-300">Copy Flake</button>
+                </div>
+                
+                <!-- Result item 3 -->
+                <div class="p-3 rounded-xl hover:bg-white/5 cursor-pointer flex justify-between items-center transition-colors">
+                    <div class="flex items-center gap-3">
+                        <i class="ph-fill ph-package text-green-400 text-xl"></i>
+                        <div>
+                            <div class="font-mono text-sm font-bold text-white">supabase-cli</div>
+                            <div class="font-mono text-xs text-gray-400">CLI for interacting with Supabase</div>
+                        </div>
+                    </div>
+                    <button class="text-xs font-mono bg-white/10 px-2 py-1 rounded text-gray-300">Copy Flake</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Agent Banner -->
+        <div class="glass-card rounded-2xl p-8 max-w-4xl mx-auto border-l-4 border-l-brand-purple flex flex-col md:flex-row items-center gap-6">
+            <div class="w-16 h-16 rounded-full bg-brand-purple/20 flex items-center justify-center shrink-0">
+                <i class="ph-fill ph-robot text-3xl text-brand-purple"></i>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold mb-2">BamOS AI Agent</h3>
+                <p class="text-sm text-gray-400">
+                    Gặp lỗi khi build cấu hình? Đừng lo. Tích hợp AI (Gemini) tự động phân tích Log lỗi trên diễn đàn, đề xuất cách sửa chuẩn xác dựa trên Wiki nội bộ của BamOS trước cả khi Admin can thiệp.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats & Status -->
+    <section class="py-16 px-6 border-y border-white/5 bg-white/[0.01]">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-around items-center gap-8">
+            <div class="text-center">
+                <div class="text-4xl font-black text-white mb-2 font-mono">1M+</div>
+                <div class="text-sm text-gray-400">Packages có sẵn (Nixpkgs)</div>
+            </div>
+            <div class="w-px h-16 bg-white/10 hidden md:block"></div>
+            <div class="text-center flex flex-col items-center">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="relative flex h-4 w-4">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-4 w-4 bg-green-500"></span>
+                    </span>
+                    <span class="text-2xl font-bold text-green-400 font-mono">PASS</span>
+                </div>
+                <div class="text-sm text-gray-400">Stable Channel Status</div>
+            </div>
+            <div class="w-px h-16 bg-white/10 hidden md:block"></div>
+            <div class="text-center">
+                <div class="text-4xl font-black text-white mb-2 font-mono">&lt; 1s</div>
+                <div class="text-sm text-gray-400">Rollback Hệ thống</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community & CTA -->
+    <section id="community" class="py-24 px-6 max-w-4xl mx-auto text-center">
+        <h2 class="text-4xl md:text-6xl font-bold mb-8 tracking-tight">
+            Tái tạo môi trường làm việc chỉ với <span class="text-gradient">1 dòng lệnh.</span>
+        </h2>
+        <p class="text-gray-400 mb-10 text-lg">Tham gia cùng cộng đồng Developers và Creators Việt Nam ngay hôm nay.</p>
+        
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <a href="#download" class="bg-white text-black px-8 py-4 rounded-xl font-bold hover:bg-gray-200 transition-colors">
+                Bắt đầu ngay
+            </a>
+            <a href="#" class="glass text-white px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-white/10 transition-colors">
+                <i class="ph-fill ph-discord-logo text-xl"></i>
+                Vào Discord
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 pt-12 pb-8 px-6 glass mt-10">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+            <div class="col-span-1 md:col-span-2">
+                <div class="flex items-center gap-2 font-bold text-xl tracking-tight mb-4">
+                    <i class="ph-fill ph-linux-logo text-brand-neon"></i>
+                    <span>BamOS</span>
+                </div>
+                <p class="text-sm text-gray-500 max-w-sm">
+                    Hệ điều hành Linux dựa trên NixOS, được tinh chỉnh dành riêng cho Lập trình viên và Game thủ/Creator Việt Nam.
+                </p>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-4">Tài nguyên</h4>
+                <ul class="space-y-2 text-sm text-gray-500">
+                    <li><a href="#" class="hover:text-brand-neon transition-colors">Tải xuống ISO</a></li>
+                    <li><a href="#" class="hover:text-brand-neon transition-colors">Tra cứu Packages</a></li>
+                    <li><a href="#" class="hover:text-brand-neon transition-colors">Wiki & Tài liệu</a></li>
+                    <li><a href="#" class="hover:text-brand-neon transition-colors">Release Notes</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-4">Cộng đồng</h4>
+                <ul class="space-y-2 text-sm text-gray-500">
+                    <li><a href="#" class="hover:text-brand-purple transition-colors">Discord Server</a></li>
+                    <li><a href="#" class="hover:text-brand-purple transition-colors">Matrix Space</a></li>
+                    <li><a href="#" class="hover:text-brand-purple transition-colors">Diễn đàn AI</a></li>
+                    <li><a href="#" class="hover:text-brand-purple transition-colors">GitHub / GitLab</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-xs text-gray-600 border-t border-white/5 pt-8">
+            <p>&copy; 2026 bamos.info. All rights reserved.</p>
+            <div class="flex gap-4 mt-4 md:mt-0">
+                <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
